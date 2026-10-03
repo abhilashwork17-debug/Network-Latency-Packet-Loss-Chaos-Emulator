@@ -1,0 +1,16 @@
+chaos_emulator
+tests/tcp_test
+tests/udp_test
+build/
+
+# Linux kernel driver build artifacts
+driver/*.ko
+driver/*.o
+driver/*.mod
+driver/*.mod.c
+driver/*.mod.o
+driver/*.cmd
+driver/modules.order
+driver/Module.symvers
+driver/.module-common.o
+driver/..module-common.o.cmd
