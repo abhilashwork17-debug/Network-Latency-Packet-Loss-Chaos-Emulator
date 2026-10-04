@@ -365,7 +365,7 @@ The project demonstrates practical concepts from:
 
 ## Author
 
-Abhinab Kumar Das
+Abhilash Mishra
 
 B.Tech – Computer Science and Engineering (IoT)
 
