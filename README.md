@@ -371,6 +371,7 @@ B.Tech – Computer Science and Engineering (IoT)
 
 Siksha 'O' Anusandhan University
 
+REG.NO: 2341013154
 ---
 
 ## License
