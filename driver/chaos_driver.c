@@ -10,12 +10,13 @@
 #include <linux/ioctl.h>
 
 #define DEVICE_NAME "chaos_driver"
-#define CLASS_NAME  "chaos"
+#define CLASS_NAME "chaos"
 #define CONFIG_SIZE 256
 
 #define CHAOS_IOCTL_MAGIC 'C'
 
-struct chaos_config {
+struct chaos_config
+{
     int latency;
     int packet_loss;
     int jitter;
@@ -39,8 +40,7 @@ static char configuration[CONFIG_SIZE] = "No configuration received\n";
 static struct chaos_config current_config = {
     .latency = 0,
     .packet_loss = 0,
-    .jitter = 0
-};
+    .jitter = 0};
 
 static int chaos_open(struct inode *inode, struct file *file)
 {
@@ -69,7 +69,8 @@ static ssize_t chaos_read(
     else
         message_length = 0;
 
-    if (message_length == 0) {
+    if (message_length == 0)
+    {
         mutex_unlock(&chaos_mutex);
         return 0;
     }
@@ -77,7 +78,8 @@ static ssize_t chaos_read(
     if (length > message_length)
         length = message_length;
 
-    if (copy_to_user(buffer, configuration, length)) {
+    if (copy_to_user(buffer, configuration, length))
+    {
         mutex_unlock(&chaos_mutex);
         return -EFAULT;
     }
@@ -109,7 +111,8 @@ static ssize_t chaos_write(
 
     memset(configuration, 0, CONFIG_SIZE);
 
-    if (copy_from_user(configuration, buffer, copy_length)) {
+    if (copy_from_user(configuration, buffer, copy_length))
+    {
         mutex_unlock(&chaos_mutex);
         return -EFAULT;
     }
@@ -131,7 +134,8 @@ static long chaos_ioctl(
 {
     struct chaos_config config;
 
-    switch (command) {
+    switch (command)
+    {
 
     case CHAOS_IOCTL_SET_CONFIG:
 
@@ -157,8 +161,7 @@ static long chaos_ioctl(
             "chaos_driver: config set - latency=%d ms, loss=%d%%, jitter=%d ms\n",
             config.latency,
             config.packet_loss,
-            config.jitter
-        );
+            config.jitter);
 
         return 0;
 
@@ -199,7 +202,8 @@ static int __init chaos_driver_init(void)
     pr_info("chaos_driver: initializing\n");
 
     ret = alloc_chrdev_region(&chaos_dev, 0, 1, DEVICE_NAME);
-    if (ret < 0) {
+    if (ret < 0)
+    {
         pr_err("chaos_driver: failed to allocate device number\n");
         return ret;
     }
@@ -208,7 +212,8 @@ static int __init chaos_driver_init(void)
     chaos_cdev.owner = THIS_MODULE;
 
     ret = cdev_add(&chaos_cdev, chaos_dev, 1);
-    if (ret < 0) {
+    if (ret < 0)
+    {
         pr_err("chaos_driver: failed to add cdev\n");
         unregister_chrdev_region(chaos_dev, 1);
         return ret;
@@ -216,7 +221,8 @@ static int __init chaos_driver_init(void)
 
     chaos_class = class_create(CLASS_NAME);
 
-    if (IS_ERR(chaos_class)) {
+    if (IS_ERR(chaos_class))
+    {
         pr_err("chaos_driver: failed to create class\n");
         cdev_del(&chaos_cdev);
         unregister_chrdev_region(chaos_dev, 1);
@@ -228,10 +234,10 @@ static int __init chaos_driver_init(void)
         NULL,
         chaos_dev,
         NULL,
-        DEVICE_NAME
-    );
+        DEVICE_NAME);
 
-    if (IS_ERR(chaos_device)) {
+    if (IS_ERR(chaos_device))
+    {
         pr_err("chaos_driver: failed to create device\n");
         class_destroy(chaos_class);
         cdev_del(&chaos_cdev);
@@ -260,6 +266,6 @@ module_init(chaos_driver_init);
 module_exit(chaos_driver_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Abhinab Kumar Das");
+MODULE_AUTHOR("Abhilash Mishra");
 MODULE_DESCRIPTION("Linux character device driver for Network Latency and Packet Loss Chaos Emulator");
 MODULE_VERSION("1.0");
